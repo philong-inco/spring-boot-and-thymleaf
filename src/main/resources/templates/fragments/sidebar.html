@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+<div class="mt-3" th:fragment="sidebar">
+  <div class="border-1 me-5 rounded shadow position-sticky" style="top: 80px;">
+    <nav class="navbar bg-light">
+      <div class="container-fluid">
+        <ul class="navbar-nav" >
+          <li class="nav-item" sec:authorize="hasAnyRole('STAFF', 'ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/product/}">Product</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyRole('STAFF', 'ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/bill/manager/list}">Bill</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyRole('STAFF', 'ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/size/}">Size</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyRole('STAFF', 'ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/color/}">Color</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/staff/}">Staff</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyRole('STAFF', 'ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/customer/}">Customer</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyRole('STAFF', 'ADMIN')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/category/}">Category</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasRole('CUSTOMER')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/home/favorite}">Danh sách yêu thích</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasRole('CUSTOMER')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/customer/profile}">Tài khoản</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasRole('CUSTOMER')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/cart}">Giỏ hàng</a>
+          </li>
+          <li class="nav-item" sec:authorize="hasRole('CUSTOMER')">
+            <a class="nav-link text-dark fw-bold" th:href="@{/bill/customer}">Hóa đơn của tôi</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="d-flex container" style="min-height: 448px;">
+    <div class="w-25">
+        <!--    lọc-->
+        <div th:replace="fragments/sidebar :: sidebar"></div>
+    </div>
+    <div class="w-75">
+        <div class="mt-5 px-3 d-flex">
+           <div class="w-50">
+
+           </div>
+            <div class="w-50">
+                <h1 class="h4" th:text="${product.productName}"></h1>
+                <p th:text="${product.productDescription}"></p>
+                <div>
+                    <a th:if="${product.favorite==1}" class="btn btn-sm btn-success text-light btn-dislike"
+                       th:attr="data-id=${product.id}, data-customer-id=${idCustomer}" th:href="@{/favorite/dislike}">Liked</a>
+                    <a th:if="${product.favorite==0}" class="btn btn-sm btn-danger text-light btn-like"
+                       th:attr="data-id=${product.id}, data-customer-id=${idCustomer}" th:href="@{/favorite/like}">Like</a>
+                </div>
+                <form id="add-to-cart-form">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Chọn</th>
+                            <th class="w-25">Màu</th>
+                            <th class="w-25">Size</th>
+                            <th class="w-25">Giá</th>
+                            <th class="w-25">Tồn kho</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="d:${details}">
+                            <td>
+                                <input type="radio" name="id" th:value="${d.id}">
+                            </td>
+                            <td class="w-25" th:text="${d.colorName}"></td>
+                            <td class="w-25" th:text="${d.sizeName}"></td>
+                            <td class="w-25" th:text="${d.price}"></td>
+                            <td class="w-25" th:text="${d.amount}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-3">
+                        <label>Số lượng: </label>
+                        <input type="number" name="amount" min="1">
+                        <input type="hidden" th:value="${idCustomer}" name="idCustomer">
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-success" type="submit">Thêm vào giỏ hàng</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script>
+    $(document).ready(function() {
+        $('#add-to-cart-form').on('submit', function(event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                type: 'POST',
+                url: '/cart/add',  // Change this to your actual endpoint
+                data: formData,
+                success: function(response) {
+                    alert('Thêm thành công');
+                },
+                error: function(error) {
+                    alert('Thất bại, điền số lượng và SP hợp lệ');
+                }
+            });
+        });
+
+        $('.btn-like').on('click', function(event) {
+            event.preventDefault();
+            var button = $(this);
+            var idSP = button.data('id');
+            var idCu = button.data('customer-id');
+            var url = '/favorite/like?idSP=' + idSP + '&idCu=' + idCu;
+            console.log(url);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(response) {
+                    alert('Đã thêm vào danh sách yêu thích');
+                    // button.removeClass('btn-danger btn-like').addClass('btn-success btn-liked').text('Liked');
+                    // // Hide like button and show liked button
+                    // button.hide();
+                    // button.siblings('.btn-liked').show();
+                },
+                error: function(error) {
+                    alert('Vui lòng thử lại!');
+                }
+            });
+        });
+
+        $('.btn-dislike').on('click', function(event) {
+            event.preventDefault();
+            var button = $(this);
+            var idSP = button.data('id');
+            var idCu = button.data('customer-id');
+            var url = '/favorite/dislike?idSP=' + idSP + '&idCu=' + idCu;
+            console.log(url);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(response) {
+                    alert('Đã bỏ thích');
+                    // button.removeClass('btn-success btn-liked').addClass('btn-danger btn-like').text('Like');
+                    // // Hide liked button and show like button
+                    // button.hide();
+                    // button.siblings('.btn-like').show();
+                },
+                error: function(error) {
+                    alert('Vui lòng thử lại!');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
